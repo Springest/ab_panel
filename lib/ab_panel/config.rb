@@ -7,12 +7,12 @@ module AbPanel
     end
 
     def tests
-      settings.keys
+      settings.keys.map(&:to_sym)
     end
 
     def scenarios(test)
-      raise ArgumentError.new( "Fatal: Test config not found for #{test}" ) unless tests.include? test
-      ( settings[test] + ['original'] ).uniq
+      raise ArgumentError.new( "Fatal: Test config not found for #{test}" ) unless tests.include? test.to_sym
+      ( settings[test.to_sym].map(&:to_sym) + [:original] ).uniq
     end
 
 
