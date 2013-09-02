@@ -40,7 +40,7 @@ module AbPanel
       # This makes sure an ab_panel session is re-initialized on every
       # request. Experiment conditions and unique user id are preserved
       # in the user's session.
-      def initialize_ab_panel!
+      def initialize_ab_panel!(options={})
         self.before_filter(options.slice(:only, :except)) do |controller|
           # Persist the conditions.
           AbPanel.conditions = controller.session['ab_panel_conditions']
