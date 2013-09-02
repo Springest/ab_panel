@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = AbPanel::VERSION
   spec.authors       = ["Wouter de Vos"]
   spec.email         = ["wouter@springest.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.description   = %q{Run A/B test experiments on your Rails 3+ site using Mixpanel as a backend.}
+  spec.summary       = %q{Run A/B test experiments on your Rails 3+ site using Mixpanel as a backend.}
+  spec.homepage      = "https://github.com/Springest/ab_panel"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
