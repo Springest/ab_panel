@@ -1,21 +1,21 @@
 require 'spec_helper'
 
 describe AbPanel do
-  describe ".tests" do
-    subject { AbPanel.tests }
+  describe ".experiments" do
+    subject { AbPanel.experiments }
 
-    it { should =~ %w(test1 test2).map(&:to_sym) }
+    it { should =~ %w(experiment1 experiment2).map(&:to_sym) }
   end
 
   describe ".scenarios" do
-    subject { AbPanel.scenarios(test) }
+    subject { AbPanel.scenarios(experiment) }
 
-    let(:test) { AbPanel.tests.first }
+    let(:experiment) { AbPanel.experiments.first }
 
     it { should =~ %w( scenario1 scenario2 scenario3 original ).map(&:to_sym) }
 
-    describe "With an unexisting test" do
-      let(:test) { :does_not_exist }
+    describe "With an unexisting experiment" do
+      let(:experiment) { :does_not_exist }
 
       it 'should throw an ArgumentError' do
         expect { subject }.to raise_exception ArgumentError
@@ -24,7 +24,7 @@ describe AbPanel do
   end
 
   describe ".conditions" do
-    subject { AbPanel.conditions.test1 }
+    subject { AbPanel.conditions.experiment1 }
 
     it { should respond_to :scenario1? }
     it { should respond_to :original? }

@@ -6,13 +6,13 @@ module AbPanel
       OpenStruct.new settings
     end
 
-    def tests
+    def experiments
       settings.keys.map(&:to_sym)
     end
 
-    def scenarios(test)
-      raise ArgumentError.new( "Fatal: Test config not found for #{test}" ) unless tests.include? test.to_sym
-      ( settings[test.to_sym].map(&:to_sym) + [:original] ).uniq
+    def scenarios(experiment)
+      raise ArgumentError.new( "Fatal: Experiment config not found for #{experiment}" ) unless experiments.include? experiment.to_sym
+      ( settings[experiment.to_sym].map(&:to_sym) + [:original] ).uniq
     end
 
 

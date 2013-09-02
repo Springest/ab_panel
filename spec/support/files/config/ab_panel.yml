@@ -1,9 +1,9 @@
-test1:
+experiment1:
   - scenario1
   - scenario2
   - scenario3
 
-test2:
+experiment2:
   - scenario4
   - scenario5
 

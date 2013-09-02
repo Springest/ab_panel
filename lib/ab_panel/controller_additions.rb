@@ -61,15 +61,19 @@ module AbPanel
       #
       # Example:
       #
-      #   track_action '[visits] Booking form', { :only => :book_now,  :hotel => :id }
+      #   track_action '[visits] Booking form', { :only => :book_now,  :course => :id }
       #
-      # This will track the event with the given name on Controller#book_now
+      # This will track the event with the given name on CoursesController#book_now
       # and assign an options hash:
       #
-      #   { 'hotel_id' => @hotel.id }
+      #   { 'course_id' => @course.id }
       def track_visit(name, properties={})
         self.after_filter(options.slice(:only, :except)) do |controller|
-          options = {}
+          options = {
+            distinct_id: ab_panel_id,
+            time:        Time.now,
+            time_utc:    Time.now.utc
+          }
 
           properties.each do |key, val|
             if controller.respond_to?(key)

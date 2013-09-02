@@ -24,12 +24,12 @@ module AbPanel
       @conditions = custom_conditions || conditions
     end
 
-    def tests
-      config.tests
+    def experiments
+      config.experiments
     end
 
-    def scenarios(test)
-      config.scenarios test
+    def scenarios(experiment)
+      config.scenarios experiment
     end
 
     def env_set key, val
@@ -47,18 +47,20 @@ module AbPanel
     def assign_conditions!
       cs = {}
 
-      tests.each do |test|
-        cs[test] ||= {}
+      experiments.each do |experiment|
+        cs[experiment] ||= {}
 
-        scenarios(test).each do |scenario|
-          cs[test]["#{scenario}?"] = false
+        scenarios(experiment).each do |scenario|
+          cs[experiment]["#{scenario}?"] = false
         end
 
-        selected = scenarios(test)[rand(scenarios(test).size)]
+        selected = scenarios(experiment)[rand(scenarios(experiment).size)]
 
-        cs[test]["#{selected}?"] = true
+        cs[experiment]["#{selected}?"] = true
 
-        cs[test] = OpenStruct.new cs[test]
+        cs[experiment][:condition] = selected
+
+        cs[experiment] = OpenStruct.new cs[experiment]
       end
 
       OpenStruct.new cs
