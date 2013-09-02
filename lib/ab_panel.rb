@@ -6,8 +6,22 @@ Dir[File.expand_path(File.join(
 
 module AbPanel
   class << self
+
+    # Track event in Mixpanel backend.
+    def track(event_name, properties, options={})
+      tracker.track event_name, properties, options
+    end
+
     def conditions
       @conditions ||= assign_conditions!
+    end
+
+    # Set the experiment's conditions.
+    #
+    # This is used to persist conditions from
+    # the session.
+    def conditions=(custom_conditions)
+      @conditions = custom_conditions || conditions
     end
 
     def tests
@@ -16,6 +30,16 @@ module AbPanel
 
     def scenarios(test)
       config.scenarios test
+    end
+
+    def env_set key, val
+      env[key] = val
+    end
+
+    def env
+      @env ||= {
+        'conditions'           => conditions
+      }
     end
 
     private # ----------------------------------------------------------------------------
@@ -38,6 +62,10 @@ module AbPanel
       end
 
       OpenStruct.new cs
+    end
+
+    def tracker
+      @tracker ||= Mixpanel::Tracker.new
     end
 
     def config

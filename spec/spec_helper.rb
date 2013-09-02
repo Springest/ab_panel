@@ -1,4 +1,5 @@
 puts "Spec Helper."
+require 'rubygems'
 require 'active_support/all'
 
 require File.join(File.dirname(__FILE__), "../lib", "ab_panel")
