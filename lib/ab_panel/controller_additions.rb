@@ -61,7 +61,7 @@ module AbPanel
       #
       # Example:
       #
-      #   track_action '[visits] Booking form', { :only => :book_now,  :course => :id }
+      #   track_visit '[visits] Booking form', { :only => :book_now,  :course => :id }
       #
       # This will track the event with the given name on CoursesController#book_now
       # and assign an options hash:

@@ -34,7 +34,7 @@ Then track any event you want from your controller:
 
 ```ruby
 class CoursesController < ApplicationController
-  track_action '[visits] Booking form', { :only => :book_now,  :course => :id }
+  track_visit '[visits] Booking form', { :only => :book_now,  :course => :id }
 
   # controller code here
 end
