@@ -15,7 +15,19 @@ module AbPanel
       end
 
       def track(event_name, properties, options={})
-        @tracker.track event_name, properties, options
+        if defined?(Resque)
+          Resque.enqueue ResqueTracker, event_name, properties, options
+        else
+          @tracker.track event_name, properties, options
+        end
+      end
+    end
+
+    class ResqueTracker
+      @queue = :ab_panel
+
+      def self.perform(event_name, properties, options={})
+        Tracker.new.track(event_name, properties, options)
       end
     end
 
