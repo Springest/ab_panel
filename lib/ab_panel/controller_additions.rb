@@ -44,6 +44,7 @@ module AbPanel
         self.before_filter(options.slice(:only, :except)) do |controller|
           # Persist the conditions.
           AbPanel.conditions = controller.session['ab_panel_conditions']
+          controller.session['ab_panel_conditions'] = AbPanel.conditions
 
           {
             'mixpanel_events' => controller.request['mixpanel_events'],
