@@ -24,7 +24,8 @@ module AbPanel
         'REMOTE_ADDR'          => request['REMOTE_ADDR'],
         'HTTP_X_FORWARDED_FOR' => request['HTTP_X_FORWARDED_FOR'],
         'rack.session'         => request['rack.session'],
-        'rails.env'            => Rails.env
+        'rails.env'            => Rails.env,
+        'ip'                   => request.remote_ip
       }
     end
 
@@ -68,10 +69,12 @@ module AbPanel
       # and assign an options hash:
       #
       #   { 'course_id' => @course.id }
-      def track_action(name, properties={})
-        self.after_filter(options.slice(:only, :except)) do |controller|
+      def track_action(name, options={})
+        self.before_filter(options.slice(:only, :except)) do |controller|
+          properties = options.slice! :only, :except
+
           options = {
-            distinct_id: ab_panel_id,
+            distinct_id: controller.ab_panel_id,
             time:        Time.now,
             time_utc:    Time.now.utc
           }
