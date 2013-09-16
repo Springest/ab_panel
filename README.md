@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Springest/ab_panel.png?branch=master)](https://travis-ci.org/Springest/ab_panel)
+
 # AbPanel
 
 Run A/B test experiments on your Rails 3+ site using Mixpanel as a backend.
