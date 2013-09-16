@@ -22,6 +22,16 @@ You can add as many experiments and conditions as you want. Every visitor
 will be assigned randomly to one condition for each scenario for as long as
 their session remains active.
 
+To track events in [Mixpanel](https://mixpanel.com), add a file called `config/mixpanel.yml` with your
+api key, api secret, and the token of of your project, like so:
+
+```yaml
+api_key: 383340bfea74ab839ebb667ab3c59fa3
+api_secret: 3990703d6d73d2b7fd78a1d19de66605
+token: 735cc06a1b1ded4827d7faff385ad6fc
+```
+
+
 In your application controller:
 
 ```ruby
