@@ -49,6 +49,13 @@ api_secret: 3990703d6d73d2b7fd78a1d19de66605
 token: 735cc06a1b1ded4827d7faff385ad6fc
 ```
 
+Enable the Mixpanel Middleware by creating a file `config/initializers/mixpanel_middleware.rb`:
+
+```ruby
+Example::Application.config.middleware.use "Mixpanel::Middleware", AbPanel::Mixpanel::Config.token, persist: true
+```
+
+See [Mixpanel Gem docs](https://github.com/zevarito/mixpanel#rack-middleware) on the Middleware for more info.
 
 In your application controller:
 
