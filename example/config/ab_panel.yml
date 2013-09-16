@@ -1,0 +1,10 @@
+my_experiment:
+  - condition_b
+  - condition_c
+
+another_experiment:
+  - foo
+  - bar
+
+third_experiment:
+  - boo

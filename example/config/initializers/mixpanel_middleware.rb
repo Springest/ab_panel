@@ -1,0 +1,2 @@
+# Enable the Mixpanel::Middleware (see: https://github.com/zevarito/mixpanel#rack-middleware)
+Example::Application.config.middleware.use "Mixpanel::Middleware", AbPanel::Mixpanel::Config.token, persist: true
