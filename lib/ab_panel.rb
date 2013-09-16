@@ -1,5 +1,3 @@
-puts "Ab Panel."
-
 Dir[File.expand_path(File.join(
   File.dirname(__FILE__),'ab_panel','**','*.rb'))]
     .each {|f| require f}
