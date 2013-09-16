@@ -9,7 +9,7 @@ module AbPanel
     #
     #   `current_user.id` for logged in users.
     def ab_panel_id
-      session[:ab_panel_id] ||=
+      session['ab_panel_id'] ||=
         (0..4).map { |i| i.even? ? ('A'..'Z').to_a[rand(26)] : rand(10) }.join
     end
 
@@ -25,7 +25,7 @@ module AbPanel
         'HTTP_X_FORWARDED_FOR' => request['HTTP_X_FORWARDED_FOR'],
         'rack.session'         => request['rack.session'],
         'rails.env'            => Rails.env,
-        'ip'                   => request.remote_ip
+        'ip'                   => request.remote_ip,
       }
     end
 
@@ -48,7 +48,6 @@ module AbPanel
           controller.session['ab_panel_conditions'] = AbPanel.conditions
 
           {
-            'mixpanel_events' => controller.request['mixpanel_events'],
             'ab_panel_id'     => controller.ab_panel_id
           }.merge(controller.ab_panel_env).each do |key, val|
             AbPanel.env_set key, val
@@ -70,14 +69,18 @@ module AbPanel
       #
       #   { 'course_id' => @course.id }
       def track_action(name, options={})
-        self.before_filter(options.slice(:only, :except)) do |controller|
+        self.after_filter(options.slice(:only, :except)) do |controller|
           properties = options.slice! :only, :except
 
           options = {
             distinct_id: controller.ab_panel_id,
-            time:        Time.now,
-            time_utc:    Time.now.utc
+            ip:          controller.request.remote_ip,
+            time:        Time.now.utc,
           }
+
+          AbPanel.experiments.each do |exp|
+            options[exp] = AbPanel.conditions.send(exp).condition rescue nil
+          end
 
           properties.each do |key, val|
             if controller.respond_to?(key)
@@ -95,9 +98,13 @@ module AbPanel
               options["#{key}_#{m}"] = inst.send(m)
             end
           end
-        end
 
-        AbPanel.track name, options
+          AbPanel.identify(controller.ab_panel_id)
+          AbPanel.track name, options
+
+          controller.session['mixpanel_events'] ||= AbPanel.env['rack.session']['mixpanel_events'] rescue []
+
+        end
       end
     end
   end

@@ -10,24 +10,17 @@ module AbPanel
       def ab_panel_options
         {
           api_key: Config.api_key,
-          env:     AbPanel.env
+          env:     AbPanel.env,
+          persist: true
         }
       end
 
-      def track(event_name, properties, options={})
-        if defined?(Resque)
-          Resque.enqueue ResqueTracker, event_name, properties, options
-        else
-          @tracker.track event_name, properties, options
-        end
+      def track(event_name, properties)
+        @tracker.append_track event_name, properties
       end
-    end
 
-    class ResqueTracker
-      @queue = :ab_panel
-
-      def self.perform(event_name, properties, options={})
-        Tracker.new.track(event_name, properties, options)
+      def identify(distinct_id)
+        @tracker.append_identify distinct_id
       end
     end
 

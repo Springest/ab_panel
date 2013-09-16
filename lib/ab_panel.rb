@@ -6,8 +6,13 @@ module AbPanel
   class << self
 
     # Track event in Mixpanel backend.
-    def track(event_name, properties, options={})
-      tracker.track event_name, properties, options
+    def track(event_name, properties)
+      tracker.track event_name, properties
+    end
+
+    # Identify
+    def identify(ab_panel_id)
+      tracker.identify ab_panel_id
     end
 
     def conditions
@@ -19,7 +24,8 @@ module AbPanel
     # This is used to persist conditions from
     # the session.
     def conditions=(custom_conditions)
-      @conditions = custom_conditions || conditions
+      return conditions unless custom_conditions
+      @conditions = assign_conditions! custom_conditions
     end
 
     def experiments
@@ -36,13 +42,13 @@ module AbPanel
 
     def env
       @env ||= {
-        'conditions'           => conditions
+        'conditions' => conditions
       }
     end
 
     private # ----------------------------------------------------------------------------
 
-    def assign_conditions!
+    def assign_conditions!(already_assigned=nil)
       cs = {}
 
       experiments.each do |experiment|
@@ -52,7 +58,11 @@ module AbPanel
           cs[experiment]["#{scenario}?"] = false
         end
 
-        selected = scenarios(experiment)[rand(scenarios(experiment).size)]
+        selected = begin
+          already_assigned.send(experiment).condition
+        rescue
+          scenarios(experiment)[rand(scenarios(experiment).size)]
+        end
 
         cs[experiment]["#{selected}?"] = true
 
@@ -65,7 +75,7 @@ module AbPanel
     end
 
     def tracker
-      @tracker ||= Mixpanel::Tracker.new
+      Mixpanel::Tracker.new
     end
 
     def config
