@@ -4,6 +4,22 @@
 
 Run A/B test experiments on your Rails 3+ site using Mixpanel as a backend.
 
+## Installation
+
+Add this line to your application's Gemfile:
+
+    gem 'ab_panel'
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install ab_panel
+
+## Usage
+
 Create a config file with one or more experiments and conditions.
 
 In `config/ab_panel.yml`
@@ -79,23 +95,7 @@ else
 end
 ```
 
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'ab_panel'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install ab_panel
-
-## Usage
-
-TODO: Write usage instructions here
+Make sure to check the [Example App](https://github.com/Springest/ab_panel/tree/master/example)
 
 ## Contributing
 
