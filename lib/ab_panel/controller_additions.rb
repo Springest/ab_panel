@@ -121,10 +121,8 @@ module AbPanel
             end
           end
 
-          options.merge controller.ab_panel_options
-
           AbPanel.identify(controller.ab_panel_id)
-          AbPanel.track name, options
+          AbPanel.track name, options.merge(controller.ab_panel_options)
 
           controller.session['mixpanel_events'] ||= AbPanel.env['rack.session']['mixpanel_events'] rescue []
 
