@@ -2,6 +2,24 @@ module AbPanel
   module ControllerAdditions
     extend ActiveSupport::Concern
 
+    # Track a single variable
+    #
+    # Example:
+    #  track_variable :name, value
+    def track_variable(name, value)
+      ab_panel_options[name.to_sym] = value
+    end
+
+    # Track multiple variables at once.
+    #
+    # Example:
+    #  track_variables { foo: 'bar', ping: 'pong'}
+    def track_variables(variables={})
+      variables.each do |key, val|
+        track_variable key, val
+      end
+    end
+
     # This sets a unique id for this user.
     #
     # You could override this in your ApplicationController to use your
@@ -27,6 +45,10 @@ module AbPanel
         'rails.env'            => Rails.env,
         'ip'                   => request.remote_ip,
       }
+    end
+
+    def ab_panel_options
+      @ab_panel_options ||= {}
     end
 
     module ClassMethods
@@ -98,6 +120,8 @@ module AbPanel
               options["#{key}_#{m}"] = inst.send(m)
             end
           end
+
+          options.merge controller.ab_panel_options
 
           AbPanel.identify(controller.ab_panel_id)
           AbPanel.track name, options

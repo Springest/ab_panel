@@ -75,6 +75,18 @@ class CoursesController < ApplicationController
 end
 ```
 
+You can track variables from within your controller actions:
+
+```ruby
+def show
+  # A single variable
+  track_variable :id, params[:id]
+
+  # Or a hash with variables
+  track_variables params
+end
+```
+
 Use conditions based on experiments and conditions throughout your code, e.g. in your views:
 
 ```erb
