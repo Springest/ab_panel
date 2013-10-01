@@ -40,6 +40,10 @@ module AbPanel
       env[key] = val
     end
 
+    def funnels
+      env['funnels'] ||= []
+    end
+
     def env
       @env ||= {
         'conditions' => conditions

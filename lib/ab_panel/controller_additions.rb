@@ -94,6 +94,9 @@ module AbPanel
         self.after_filter(options.slice(:only, :except)) do |controller|
           properties = options.slice! :only, :except
 
+          funnel = properties.delete(:funnel)
+          AbPanel.funnels << funnel if funnel.present?
+
           options = {
             distinct_id: controller.ab_panel_id,
             ip:          controller.request.remote_ip,
