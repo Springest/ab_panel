@@ -8,11 +8,17 @@ module AbPanel
       end
 
       def ab_panel_options
-        {
+        opts = {
           api_key: Config.api_key,
           env:     AbPanel.env,
           persist: true
         }
+
+        AbPanel.funnels.each do |funnel|
+          opts["funnel_#{funnel}"] = true
+        end
+
+        opts
       end
 
       def track(event_name, properties)
