@@ -103,6 +103,10 @@ module AbPanel
             time:        Time.now.utc,
           }
 
+          AbPanel.funnels.each do |funnel|
+            options["funnel_#{funnel}"] = true
+          end
+
           AbPanel.experiments.each do |exp|
             options[exp] = AbPanel.conditions.send(exp).condition rescue nil
           end
@@ -128,7 +132,6 @@ module AbPanel
           AbPanel.track name, options.merge(controller.ab_panel_options)
 
           controller.session['mixpanel_events'] ||= AbPanel.env['rack.session']['mixpanel_events'] rescue []
-
         end
       end
     end
