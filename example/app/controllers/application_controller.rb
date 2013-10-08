@@ -1,8 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
-  # Initialize AB Panel
-  initialize_ab_panel!
+  before_filter :initialize_ab_panel!
 
   after_filter :ab_env_logger
 

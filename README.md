@@ -61,7 +61,7 @@ In your application controller:
 
 ```ruby
 class ApplicationController < ActionController::Base
-  initialize_ab_panel!
+  before_filter :initialize_ab_panel!
 end
 ```
 
@@ -69,9 +69,9 @@ Then track any event you want from your controller:
 
 ```ruby
 class CoursesController < ApplicationController
-  track_action '[visits] Booking form', { :only => :book_now,  :course => :id }
-
-  # controller code here
+  def show
+    track_action '[visits] Course', { :course => :id }
+  end
 end
 ```
 
@@ -83,7 +83,7 @@ def show
   track_variable :id, params[:id]
 
   # Or a hash with variables
-  track_variables params
+  track_variables { id: params[:id], email: current_user.email }
 end
 ```
 
