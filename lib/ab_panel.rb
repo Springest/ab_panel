@@ -11,8 +11,8 @@ module AbPanel
     end
 
     # Identify
-    def identify(ab_panel_id)
-      tracker.identify ab_panel_id
+    def identify(distinct_id)
+      tracker.identify distinct_id
     end
 
     def conditions

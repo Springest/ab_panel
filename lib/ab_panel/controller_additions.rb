@@ -26,8 +26,8 @@ module AbPanel
     # own implementation, e.g.:
     #
     #   `current_user.id` for logged in users.
-    def ab_panel_id
-      session['ab_panel_id'] ||=
+    def distinct_id
+      session['distinct_id'] ||=
         (0..4).map { |i| i.even? ? ('A'..'Z').to_a[rand(26)] : rand(10) }.join
     end
 
@@ -51,7 +51,7 @@ module AbPanel
       session['ab_panel_conditions'] = AbPanel.conditions
 
       {
-        'ab_panel_id' => ab_panel_id,
+        'distinct_id' => distinct_id,
         'rack.session' => request['rack.session'],
         'ip' => request.remote_ip
       }.each do |key, value|
@@ -79,7 +79,7 @@ module AbPanel
       AbPanel.funnels << funnel if funnel.present?
 
       options = {
-        distinct_id: ab_panel_id,
+        distinct_id: distinct_id,
         ip:          request.remote_ip,
         time:        Time.now.utc,
       }
@@ -109,7 +109,7 @@ module AbPanel
         end
       end
 
-      AbPanel.identify(ab_panel_id)
+      AbPanel.identify(distinct_id)
       AbPanel.track(name, options.merge(ab_panel_options))
 
       session['mixpanel_events'] ||= AbPanel.env['rack.session']['mixpanel_events'] rescue []
