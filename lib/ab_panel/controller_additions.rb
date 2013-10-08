@@ -31,22 +31,6 @@ module AbPanel
         (0..4).map { |i| i.even? ? ('A'..'Z').to_a[rand(26)] : rand(10) }.join
     end
 
-    # Sets the environment hash for every request.
-    #
-    # Experiment conditions and unique user id are preserved
-    # in the user's session.
-    #
-    # You could override this to match your own env.
-    def ab_panel_env
-      {
-        'REMOTE_ADDR'          => request['REMOTE_ADDR'],
-        'HTTP_X_FORWARDED_FOR' => request['HTTP_X_FORWARDED_FOR'],
-        'rack.session'         => request['rack.session'],
-        'rails.env'            => Rails.env,
-        'ip'                   => request.remote_ip,
-      }
-    end
-
     def ab_panel_options
       @ab_panel_options ||= {}
     end
@@ -67,9 +51,11 @@ module AbPanel
       session['ab_panel_conditions'] = AbPanel.conditions
 
       {
-        'ab_panel_id' => ab_panel_id
-      }.merge(ab_panel_env).each do |key, val|
-        AbPanel.env_set(key, val)
+        'ab_panel_id' => ab_panel_id,
+        'rack.session' => request['rack.session'],
+        'ip' => request.remote_ip
+      }.each do |key, value|
+        AbPanel.set_env(key, value)
       end
     end
 

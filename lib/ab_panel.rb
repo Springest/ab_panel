@@ -36,18 +36,18 @@ module AbPanel
       config.scenarios experiment
     end
 
-    def env_set key, val
-      env[key] = val
-    end
-
-    def funnels
-      env['funnels'] ||= []
-    end
-
     def env
       @env ||= {
         'conditions' => conditions
       }
+    end
+
+    def set_env(key, value)
+      env[key] = value
+    end
+
+    def funnels
+      env['funnels'] ||= []
     end
 
     private # ----------------------------------------------------------------------------
