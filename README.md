@@ -40,19 +40,21 @@ You can add as many experiments and conditions as you want. Every visitor
 will be assigned randomly to one condition for each scenario for as long as
 their session remains active.
 
-To track events in [Mixpanel](https://mixpanel.com), add a file called `config/mixpanel.yml` with your
-api key, api secret, and the token of of your project, like so:
+To track events in [Mixpanel](https://mixpanel.com), create a file called
+`config/mixpanel.yml` with your api key, api secret, and the token of of your
+project for every environment you want to run Mixpanel in, like so:
 
 ```yaml
-api_key: 383340bfea74ab839ebb667ab3c59fa3
-api_secret: 3990703d6d73d2b7fd78a1d19de66605
-token: 735cc06a1b1ded4827d7faff385ad6fc
+production:
+  api_key: 383340bfea74ab839ebb667ab3c59fa3
+  api_secret: 3990703d6d73d2b7fd78a1d19de66605
+  token: 735cc06a1b1ded4827d7faff385ad6fc
 ```
 
-Enable the Mixpanel Middleware by creating a file `config/initializers/mixpanel_middleware.rb`:
+Enable the Mixpanel Middleware by adding it in the [necessary environments](example/config/environments/production.rb#L68):
 
 ```ruby
-Example::Application.config.middleware.use "Mixpanel::Middleware", AbPanel::Mixpanel::Config.token, persist: true
+config.middleware.use Mixpanel::Middleware, AbPanel::Mixpanel::Config.token, persist: true
 ```
 
 See [Mixpanel Gem docs](https://github.com/zevarito/mixpanel#rack-middleware) on the Middleware for more info.

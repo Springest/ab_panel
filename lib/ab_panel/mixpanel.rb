@@ -3,13 +3,14 @@ require 'mixpanel'
 module AbPanel
   module Mixpanel
     class Tracker < ::Mixpanel::Tracker
-      def initialize(options={})
+      def initialize(options = {})
+        return if !should_track?
+
         @tracker = ::Mixpanel::Tracker.new Config.token, ab_panel_options.merge(options)
       end
 
       def ab_panel_options
         opts = {
-          api_key: Config.api_key,
           env:     AbPanel.env,
           persist: true
         }
@@ -22,26 +23,42 @@ module AbPanel
       end
 
       def track(event_name, properties)
+        return if !should_track?
+
         @tracker.append_track event_name, properties
       end
 
       def identify(distinct_id)
+        return if !should_track?
+
         @tracker.append_identify distinct_id
+      end
+
+      private
+
+      def should_track?
+        @should_track ||= Config.environments.include?(Rails.env)
       end
     end
 
     class Config
-      def self.api_key
-        config['api_key']
+      def self.token
+        config[Rails.env]['token']
       end
 
-      def self.token
-        config['token']
+      def self.environments
+        config.keys
       end
 
       def self.config
-        @settings ||= YAML.load(
-          ERB.new(File.read(File.join(Rails.root, 'config', 'mixpanel.yml'))).result)
+        @settings ||= load_config
+      end
+
+      private
+
+      def self.load_config
+        file = File.read(File.join(Rails.root, 'config', 'mixpanel.yml'))
+        YAML.load(file)
       end
     end
   end
