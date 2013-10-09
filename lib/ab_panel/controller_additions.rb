@@ -47,6 +47,7 @@ module AbPanel
     # request. Experiment conditions and unique user id are preserved
     # in the user's session.
     def initialize_ab_panel!(options = {})
+      AbPanel.reset!
       AbPanel.conditions = session['ab_panel_conditions']
       session['ab_panel_conditions'] = AbPanel.conditions
 

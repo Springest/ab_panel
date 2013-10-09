@@ -42,6 +42,11 @@ module AbPanel
       }
     end
 
+    def reset!
+      @env = nil
+      @conditions = nil
+    end
+
     def set_env(key, value)
       env[key] = value
     end
