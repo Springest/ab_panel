@@ -34,4 +34,6 @@ Example::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+
+  config.middleware.use Mixpanel::Middleware, AbPanel::Mixpanel::Config.token, persist: true
 end

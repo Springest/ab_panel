@@ -26,114 +26,94 @@ module AbPanel
     # own implementation, e.g.:
     #
     #   `current_user.id` for logged in users.
-    def ab_panel_id
-      session['ab_panel_id'] ||=
+    def distinct_id
+      session['distinct_id'] ||=
         (0..4).map { |i| i.even? ? ('A'..'Z').to_a[rand(26)] : rand(10) }.join
-    end
-
-    # Sets the environment hash for every request.
-    #
-    # Experiment conditions and unique user id are preserved
-    # in the user's session.
-    #
-    # You could override this to match your own env.
-    def ab_panel_env
-      {
-        'REMOTE_ADDR'          => request['REMOTE_ADDR'],
-        'HTTP_X_FORWARDED_FOR' => request['HTTP_X_FORWARDED_FOR'],
-        'rack.session'         => request['rack.session'],
-        'rails.env'            => Rails.env,
-        'ip'                   => request.remote_ip,
-      }
     end
 
     def ab_panel_options
       @ab_panel_options ||= {}
     end
 
-    module ClassMethods
-      # Initializes AbPanel's environment.
-      #
-      # Typically, this would go in the ApplicationController.
-      #
-      #   class ApplicationController < ActionController::Base
-      #     initialize_ab_panel!
-      #   end
-      #
-      # This makes sure an ab_panel session is re-initialized on every
-      # request. Experiment conditions and unique user id are preserved
-      # in the user's session.
-      def initialize_ab_panel!(options={})
-        self.before_filter(options.slice(:only, :except)) do |controller|
-          # Persist the conditions.
-          AbPanel.conditions = controller.session['ab_panel_conditions']
-          controller.session['ab_panel_conditions'] = AbPanel.conditions
+    # Initializes AbPanel's environment.
+    #
+    # Typically, this would go in a global before filter.
+    #
+    #   class ApplicationController < ActionController::Base
+    #     before_filter :initialize_ab_panel!
+    #   end
+    #
+    # This makes sure an ab_panel session is re-initialized on every
+    # request. Experiment conditions and unique user id are preserved
+    # in the user's session.
+    def initialize_ab_panel!(options = {})
+      AbPanel.reset!
+      AbPanel.conditions = session['ab_panel_conditions']
+      session['ab_panel_conditions'] = AbPanel.conditions
 
-          {
-            'ab_panel_id'     => controller.ab_panel_id
-          }.merge(controller.ab_panel_env).each do |key, val|
-            AbPanel.env_set key, val
-          end
+      {
+        'distinct_id' => distinct_id,
+        'rack.session' => request['rack.session'],
+        'ip' => request.remote_ip
+      }.each do |key, value|
+        AbPanel.set_env(key, value)
+      end
+    end
+
+    # Track controller actions visits.
+    #
+    # name       - The name of the event in Mixpanel.
+    # properties - The properties to be associated with the event.
+    #
+    # Example:
+    #
+    #   def show
+    #     track_action '[visits] Course', { :course => :id }
+    #   end
+    #
+    # This will track the event with the given name on CoursesController#show
+    # and assign an options hash:
+    #
+    #   { 'course_id' => @course.id }
+    def track_action(name, properties = {})
+      funnel = properties.delete(:funnel)
+      AbPanel.funnels << funnel if funnel.present?
+
+      options = {
+        distinct_id: distinct_id,
+        ip:          request.remote_ip,
+        time:        Time.now.utc,
+      }
+
+      AbPanel.funnels.each do |funnel|
+        options["funnel_#{funnel}"] = true
+      end
+
+      AbPanel.experiments.each do |exp|
+        options[exp] = AbPanel.conditions.send(exp).condition rescue nil
+      end
+
+      properties.each do |key, val|
+        if respond_to?(key)
+          inst = send(key)
+        elsif instance_variable_defined?("@#{key}")
+          inst = instance_variable_get("@#{key}")
+        else
+          options[key] = val
+          next
+        end
+
+        val = *val
+
+        val.each do |m|
+          options["#{key}_#{m}"] = inst.send(m)
         end
       end
 
-      # Track controller actions visits.
-      #
-      # name       - The name of the event in Mixpanel.
-      # properties - The properties to be associated with the event.
-      #
-      # Example:
-      #
-      #   track_action '[visits] Booking form', { :only => :book_now,  :course => :id }
-      #
-      # This will track the event with the given name on CoursesController#book_now
-      # and assign an options hash:
-      #
-      #   { 'course_id' => @course.id }
-      def track_action(name, options={})
-        self.after_filter(options.slice(:only, :except)) do |controller|
-          properties = options.slice! :only, :except
+      AbPanel.identify(distinct_id)
+      AbPanel.track(name, options.merge(ab_panel_options))
 
-          funnel = properties.delete(:funnel)
-          AbPanel.funnels << funnel if funnel.present?
-
-          options = {
-            distinct_id: controller.ab_panel_id,
-            ip:          controller.request.remote_ip,
-            time:        Time.now.utc,
-          }
-
-          AbPanel.funnels.each do |funnel|
-            options["funnel_#{funnel}"] = true
-          end
-
-          AbPanel.experiments.each do |exp|
-            options[exp] = AbPanel.conditions.send(exp).condition rescue nil
-          end
-
-          properties.each do |key, val|
-            if controller.respond_to?(key)
-              inst = controller.send(key)
-            elsif controller.instance_variable_defined?("@#{key}")
-              inst = controller.instance_variable_get("@#{key}")
-            else
-              options[key] = val
-              next
-            end
-
-            val = *val
-
-            val.each do |m|
-              options["#{key}_#{m}"] = inst.send(m)
-            end
-          end
-
-          AbPanel.identify(controller.ab_panel_id)
-          AbPanel.track name, options.merge(controller.ab_panel_options)
-
-          controller.session['mixpanel_events'] ||= AbPanel.env['rack.session']['mixpanel_events'] rescue []
-        end
-      end
+      session['mixpanel_events'] ||= AbPanel.env['rack.session']['mixpanel_events'] rescue []
     end
   end
 end

@@ -11,8 +11,8 @@ module AbPanel
     end
 
     # Identify
-    def identify(ab_panel_id)
-      tracker.identify ab_panel_id
+    def identify(distinct_id)
+      tracker.identify distinct_id
     end
 
     def conditions
@@ -36,18 +36,23 @@ module AbPanel
       config.scenarios experiment
     end
 
-    def env_set key, val
-      env[key] = val
-    end
-
-    def funnels
-      env['funnels'] ||= []
-    end
-
     def env
       @env ||= {
         'conditions' => conditions
       }
+    end
+
+    def reset!
+      @env = nil
+      @conditions = nil
+    end
+
+    def set_env(key, value)
+      env[key] = value
+    end
+
+    def funnels
+      env['funnels'] ||= []
     end
 
     private # ----------------------------------------------------------------------------
