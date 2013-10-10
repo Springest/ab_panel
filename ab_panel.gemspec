@@ -6,8 +6,8 @@ require 'ab_panel/version'
 Gem::Specification.new do |spec|
   spec.name          = "ab_panel"
   spec.version       = AbPanel::VERSION
-  spec.authors       = ["Wouter de Vos"]
-  spec.email         = ["wouter@springest.com"]
+  spec.authors       = ["Wouter de Vos", "Mark Mulder"]
+  spec.email         = ["wouter@springest.com", "markmulder@gmail.com"]
   spec.description   = %q{Run A/B test experiments on your Rails 3+ site using Mixpanel as a backend.}
   spec.summary       = %q{Run A/B test experiments on your Rails 3+ site using Mixpanel as a backend.}
   spec.homepage      = "https://github.com/Springest/ab_panel"
