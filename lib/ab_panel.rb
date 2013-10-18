@@ -1,3 +1,4 @@
+require 'set'
 Dir[File.expand_path(File.join(
   File.dirname(__FILE__),'ab_panel','**','*.rb'))]
     .each {|f| require f}
@@ -52,7 +53,15 @@ module AbPanel
     end
 
     def funnels
-      env['funnels'] ||= []
+      env['funnels'] ||= Set.new
+    end
+
+    def funnels=(funnels)
+      env['funnels'] = funnels
+    end
+
+    def add_funnel(funnel)
+      funnels.add(funnel) if funnel.present?
     end
 
     private # ----------------------------------------------------------------------------
