@@ -50,6 +50,8 @@ module AbPanel
       AbPanel.reset!
       AbPanel.conditions = session['ab_panel_conditions']
       session['ab_panel_conditions'] = AbPanel.conditions
+      AbPanel.funnels = session['ab_panel_funnels']
+      session['ab_panel_funnels'] = AbPanel.funnels
 
       {
         'distinct_id' => distinct_id,
@@ -76,8 +78,7 @@ module AbPanel
     #
     #   { 'course_id' => @course.id }
     def track_action(name, properties = {})
-      funnel = properties.delete(:funnel)
-      AbPanel.funnels << funnel if funnel.present?
+      AbPanel.add_funnel(properties.delete(:funnel))
 
       options = {
         distinct_id: distinct_id,

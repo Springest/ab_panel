@@ -45,4 +45,32 @@ describe AbPanel do
       it { conditions.reject{|c| c}.size.should be 3 }
     end
   end
+
+  describe ".funnels" do
+    after do
+      AbPanel.funnels = nil
+    end
+
+    it 'adds a funnel' do
+      AbPanel.add_funnel('search')
+      AbPanel.funnels.to_a.should == ['search']
+    end
+
+    it 'only adds a funnel when present' do
+      AbPanel.add_funnel(nil)
+      AbPanel.funnels.to_a.should == []
+    end
+
+    it 'does not add a funnel twice' do
+      AbPanel.add_funnel('search')
+      AbPanel.add_funnel('search')
+      AbPanel.funnels.to_a.should == ['search']
+    end
+
+    it 'sets funnels' do
+      funnels = Set.new ['search', 'cta']
+      AbPanel.funnels = funnels
+      AbPanel.funnels.to_a.should == funnels.to_a
+    end
+  end
 end
