@@ -11,12 +11,12 @@ class PostsController < ApplicationController
   def show
     @post = Post.find(params[:id])
 
+    track_action '[visits] post', post_id: @post.id
+
     respond_to do |format|
       format.html
       format.json { render json: @post }
     end
-
-    track_action '[visits] post', :post => :id
   end
 
   def new
@@ -73,7 +73,7 @@ class PostsController < ApplicationController
   # Useful for testing if every event gets tracked when using persist: true.
   def redirect
     @post = Post.find(params[:id])
-    track_action '[redirect] post', post_id: @post.id
+    track_action '[redirects] post', post_id: @post.id
     redirect_to @post
   end
 end

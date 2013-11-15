@@ -70,13 +70,11 @@ module AbPanel
     # Example:
     #
     #   def show
-    #     track_action '[visits] Course', { :course => :id }
+    #     track_action '[visits] Course', { :course_id => @course.id }
     #   end
     #
     # This will track the event with the given name on CoursesController#show
-    # and assign an options hash:
-    #
-    #   { 'course_id' => @course.id }
+    # with the passed in attributes.
     def track_action(name, properties = {})
       AbPanel.add_funnel(properties.delete(:funnel))
 
@@ -84,7 +82,7 @@ module AbPanel
         distinct_id: distinct_id,
         ip:          request.remote_ip,
         time:        Time.now.utc,
-      }
+      }.merge(properties)
 
       AbPanel.funnels.each do |funnel|
         options["funnel_#{funnel}"] = true
@@ -94,22 +92,8 @@ module AbPanel
         options[exp] = AbPanel.conditions.send(exp).condition rescue nil
       end
 
-      properties.each do |key, val|
-        if respond_to?(key)
-          inst = send(key)
-        elsif instance_variable_defined?("@#{key}")
-          inst = instance_variable_get("@#{key}")
-        else
-          options[key] = val
-          next
-        end
-
-        val = *val
-
-        val.each do |m|
-          options["#{key}_#{m}"] = inst.send(m)
-        end
-      end
+      options.merge!(ab_panel_options)
+      AbPanel.set_env(:properties, options)
 
       AbPanel.identify(distinct_id)
       AbPanel.track(name, options.merge(ab_panel_options))
