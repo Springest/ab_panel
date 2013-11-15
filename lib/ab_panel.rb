@@ -37,6 +37,10 @@ module AbPanel
       config.scenarios experiment
     end
 
+    def properties
+      @env[:properties]
+    end
+
     def env
       @env ||= {
         'conditions' => conditions
