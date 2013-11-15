@@ -55,7 +55,7 @@ module AbPanel
 
       {
         'distinct_id' => distinct_id,
-        'rack.session' => request['rack.session'],
+        'rack.session' => request.env['rack.session'],
         'ip' => request.remote_ip
       }.each do |key, value|
         AbPanel.set_env(key, value)
@@ -113,8 +113,6 @@ module AbPanel
 
       AbPanel.identify(distinct_id)
       AbPanel.track(name, options.merge(ab_panel_options))
-
-      session['mixpanel_events'] ||= AbPanel.env['rack.session']['mixpanel_events'] rescue []
     end
   end
 end

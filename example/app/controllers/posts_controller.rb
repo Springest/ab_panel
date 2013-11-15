@@ -69,4 +69,11 @@ class PostsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  # Useful for testing if every event gets tracked when using persist: true.
+  def redirect
+    @post = Post.find(params[:id])
+    track_action '[redirect] post', post_id: @post.id
+    redirect_to @post
+  end
 end
