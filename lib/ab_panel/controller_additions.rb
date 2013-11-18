@@ -27,7 +27,7 @@ module AbPanel
     #
     #   `current_user.id` for logged in users.
     def distinct_id
-      session['distinct_id'] ||=
+      cookies.signed['distinct_id'] ||=
         (0..4).map { |i| i.even? ? ('A'..'Z').to_a[rand(26)] : rand(10) }.join
     end
 
@@ -48,10 +48,10 @@ module AbPanel
     # in the user's session.
     def initialize_ab_panel!(options = {})
       AbPanel.reset!
-      AbPanel.conditions = session['ab_panel_conditions']
-      session['ab_panel_conditions'] = AbPanel.conditions
-      AbPanel.funnels = session['ab_panel_funnels']
-      session['ab_panel_funnels'] = AbPanel.funnels
+      AbPanel.conditions = cookies.signed['ab_panel_conditions']
+      cookies.signed['ab_panel_conditions'] = AbPanel.conditions
+      AbPanel.funnels = cookies.signed['ab_panel_funnels']
+      cookies.signed['ab_panel_funnels'] = AbPanel.funnels
 
       {
         'distinct_id' => distinct_id,
