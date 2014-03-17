@@ -22,7 +22,7 @@ describe AbPanel::Config do
 
     it { should =~ [75.0, 25.0] }
 
-    context "less then 100%" do
+    context "less than 100%" do
       before { config.stub(:settings) { { exp1: { scenario1: 25, scenario2: 74 } } } }
 
       it "should throw an error" do
@@ -30,7 +30,7 @@ describe AbPanel::Config do
       end
     end
 
-    context "less then 100%" do
+    context "less than 100%" do
       before { config.stub(:settings) { { exp1: { scenario1: 25, scenario2: 76 } } } }
 
       it "should throw an error" do

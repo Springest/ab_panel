@@ -13,7 +13,7 @@ describe AbPanel do
 
     it { should == [25, 25, 25, 25] }
 
-    describe "With an unexisting experiment" do
+    describe "With a nonexistent experiment" do
       let(:experiment) { :does_not_exist }
 
       it 'should throw an ArgumentError' do
@@ -29,7 +29,7 @@ describe AbPanel do
 
     it { should =~ %w( scenario1 scenario2 scenario3 original ).map(&:to_sym) }
 
-    describe "With an unexisting experiment" do
+    describe "With an nonexistent experiment" do
       let(:experiment) { :does_not_exist }
 
       it 'should throw an ArgumentError' do
