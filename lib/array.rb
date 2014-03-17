@@ -7,15 +7,15 @@ class Array
     # The total sum of weights is multiplied by a random number
     trigger = Kernel::rand * total
 
-    sum = 0
+    subtotal = 0
     result = nil
 
-    # The sum is checked agains the trigger. The higher the sum, the higher
+    # The subtotal is checked agains the trigger. The higher the sum, the higher
     # the probability of triggering a result.
     weights.each_with_index do |weight, index|
-      sum += weight
+      subtotal += weight
 
-      if sum > trigger
+      if subtotal > trigger
         result = self[index]
         break
       end
