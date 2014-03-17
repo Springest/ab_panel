@@ -1,9 +1,11 @@
 experiment1:
-  - scenario1
-  - scenario2
-  - scenario3
+  scenario1: 25
+  scenario2: 25
+  scenario3: 25
+  original: 25
 
 experiment2:
-  - scenario4
-  - scenario5
+  scenario4: 33.4
+  scenario5: 33.3
+  original: 33.3
 

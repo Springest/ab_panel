@@ -1,4 +1,6 @@
 require 'set'
+require_relative './array'
+
 Dir[File.expand_path(File.join(
   File.dirname(__FILE__),'ab_panel','**','*.rb'))]
     .each {|f| require f}
@@ -35,6 +37,10 @@ module AbPanel
 
     def scenarios(experiment)
       config.scenarios experiment
+    end
+
+    def weights(experiment)
+      config.weights experiment
     end
 
     def properties
@@ -83,7 +89,7 @@ module AbPanel
         selected = begin
           already_assigned.send(experiment).condition
         rescue
-          scenarios(experiment)[rand(scenarios(experiment).size)]
+          scenarios(experiment).weighted_sample(weights(experiment))
         end
 
         cs[experiment]["#{selected}?"] = true
