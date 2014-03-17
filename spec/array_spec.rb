@@ -41,6 +41,10 @@ describe Array do
       before { Kernel.stub(:rand) { 1 } }
       subject { array.weighted_sample([0, 0, 0, 0]) }
       it { should eq 4 }
+      context "random 0" do
+        before { Kernel.stub(:rand) { 0 } }
+        it { should eq 1 }
+      end
     end
   end
 end

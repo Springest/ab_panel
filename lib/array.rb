@@ -1,7 +1,6 @@
 class Array
   def weighted_sample(weights=nil)
-    weights ||= Array.new(length, 1.0)
-
+    weights = Array.new(length, 1.0) if weights.nil? || weights.sum == 0
     total = weights.sum
 
     # The total sum of weights is multiplied by a random number
