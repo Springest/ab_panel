@@ -7,6 +7,21 @@ describe AbPanel do
     it { should =~ %w(experiment1 experiment2).map(&:to_sym) }
   end
 
+  describe ".weights" do
+    let(:experiment) { AbPanel.experiments.first }
+    subject { AbPanel.weights(experiment) }
+
+    it { should == [25, 25, 25, 25] }
+
+    describe "With a nonexistent experiment" do
+      let(:experiment) { :does_not_exist }
+
+      it 'should throw an ArgumentError' do
+        expect { subject }.to raise_exception ArgumentError
+      end
+    end
+  end
+
   describe ".scenarios" do
     subject { AbPanel.scenarios(experiment) }
 
@@ -14,7 +29,7 @@ describe AbPanel do
 
     it { should =~ %w( scenario1 scenario2 scenario3 original ).map(&:to_sym) }
 
-    describe "With an unexisting experiment" do
+    describe "With an nonexistent experiment" do
       let(:experiment) { :does_not_exist }
 
       it 'should throw an ArgumentError' do

@@ -18,6 +18,35 @@ Or install it yourself as:
 
     $ gem install ab_panel
 
+## Upgrading from 0.2.0 to 0.3.0
+
+In this new version we've added weights to different conditions/scenarios. This
+is so that you can rollout certain features slowly. We've also removed the
+original (control scenario) that is added standard.
+
+The only thing you need to do to upgrade is update the ``ab_panel.yml``.
+
+Old:
+
+```yaml
+
+foo:
+  - bar1
+  - bar2
+
+```
+
+New (if you want to keep original or need original):
+
+```yaml
+
+foo:
+  bar1: 2
+  bar2: 2
+  original: 2
+
+```
+
 ## Usage
 
 Create a config file with one or more experiments and conditions.
@@ -26,13 +55,14 @@ In `config/ab_panel.yml`
 
 ```yaml
 my_experiment:
-  - condition_b
-  - condition_c
+  original:    1
+  condition_b: 1
+  condition_c: 1
 ```
 
 Note that this will create 3 conditions:
 
-  1. Original condition (control condition)
+  1. Original condition 
   2. Condition B
   3. Condition C
 
