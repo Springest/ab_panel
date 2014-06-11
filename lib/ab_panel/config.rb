@@ -22,10 +22,9 @@ module AbPanel
     end
 
     def settings
+      return @settings if defined?(@settings)
       results = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'ab_panel.yml'))).result)
-      if results
-        @settings ||= results.symbolize_keys
-      end
+      @settings = results ? results.symbolize_keys : nil
     end
   end
 end
