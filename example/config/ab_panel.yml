@@ -1,10 +1,10 @@
 my_experiment:
-  - condition_b
-  - condition_c
+  condition_b: 1
+  condition_c: 1
 
 another_experiment:
-  - foo
-  - bar
+  foo: 1
+  bar: 1
 
 third_experiment:
-  - boo
+  boo: 1
