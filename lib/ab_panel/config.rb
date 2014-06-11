@@ -7,6 +7,7 @@ module AbPanel
     end
 
     def experiments
+      return {} if !settings
       settings.keys.map(&:to_sym)
     end
 
@@ -21,9 +22,10 @@ module AbPanel
     end
 
     def settings
-      @settings ||= YAML.load(
-        ERB.new(File.read(File.join(Rails.root, 'config', 'ab_panel.yml'))).result)
-        .symbolize_keys
+      results = YAML.load(ERB.new(File.read(File.join(Rails.root, 'config', 'ab_panel.yml'))).result)
+      if results
+        @settings ||= results.symbolize_keys
+      end
     end
   end
 end

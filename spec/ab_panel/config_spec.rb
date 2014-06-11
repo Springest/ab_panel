@@ -16,4 +16,19 @@ describe AbPanel::Config do
 
     it { should =~ [75.0, 25.0] }
   end
+
+  context "empty config" do
+    before do
+      AbPanel::Config.any_instance.stub(:settings) { }
+    end
+    describe ".settings" do
+      subject { config.settings }
+      it { should eq nil }
+    end
+
+    describe ".experiments" do
+      subject { config.experiments }
+      it { should = {} }
+    end
+  end
 end
