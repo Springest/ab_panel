@@ -26,5 +26,10 @@ describe AbPanel::Config do
       subject { config.settings }
       it { should eq nil }
     end
+
+    describe ".experiments" do
+      subject { config.experiments }
+      it { should == {} }
+    end
   end
 end
