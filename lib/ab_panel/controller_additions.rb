@@ -82,6 +82,7 @@ module AbPanel
         distinct_id: distinct_id,
         ip:          request.remote_ip,
         time:        Time.now.utc,
+        url:         request.original_url
       }.merge(properties)
 
       AbPanel.funnels.each do |funnel|

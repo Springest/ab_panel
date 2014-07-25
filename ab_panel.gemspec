@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "fakeweb"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "debugger"
+  spec.add_development_dependency "timecop"
 
   spec.add_runtime_dependency "mixpanel"
 end
