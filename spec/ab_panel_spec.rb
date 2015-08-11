@@ -62,6 +62,10 @@ describe AbPanel do
   end
 
   describe ".funnels" do
+    before do
+      AbPanel.reset!
+    end
+
     after do
       AbPanel.funnels = nil
     end

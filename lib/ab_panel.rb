@@ -63,11 +63,11 @@ module AbPanel
     end
 
     def funnels
-      env['funnels'] ||= Set.new
+      env[:funnels] ||= Set.new
     end
 
     def funnels=(funnels)
-      Thread.current['ab_panel_env']['funnels'] = funnels
+      env[:funnels] = funnels
     end
 
     def add_funnel(funnel)
