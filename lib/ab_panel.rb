@@ -19,7 +19,7 @@ module AbPanel
     end
 
     def conditions
-      @conditions ||= assign_conditions!
+      Thread.current[:ab_panel_conditions] ||= assign_conditions!
     end
 
     # Set the experiment's conditions.
@@ -28,7 +28,7 @@ module AbPanel
     # the session.
     def conditions=(custom_conditions)
       return conditions unless custom_conditions
-      @conditions = assign_conditions! custom_conditions
+      Thread.current[:ab_panel_conditions] = assign_conditions! custom_conditions
     end
 
     def experiments
@@ -44,18 +44,18 @@ module AbPanel
     end
 
     def properties
-      @env[:properties]
+      env[:properties]
     end
 
     def env
-      @env ||= {
+      Thread.current[:ab_panel_env] ||= {
         'conditions' => conditions
       }
     end
 
     def reset!
-      @env = nil
-      @conditions = nil
+      Thread.current[:ab_panel_env] = nil
+      Thread.current[:ab_panel_conditions] = nil
     end
 
     def set_env(key, value)
@@ -67,7 +67,7 @@ module AbPanel
     end
 
     def funnels=(funnels)
-      env['funnels'] = funnels
+      Thread.current['ab_panel_env']['funnels'] = funnels
     end
 
     def add_funnel(funnel)

@@ -88,4 +88,12 @@ describe AbPanel do
       AbPanel.funnels.to_a.should == funnels.to_a
     end
   end
+
+  describe 'thread-safety' do
+    it 'should set be safe' do
+      AbPanel.set_env(:test, 'a')
+      Thread.new { AbPanel.set_env(:test, 'b') }.join
+      expect(AbPanel.env[:test]).to eq 'a'
+    end
+  end
 end
