@@ -49,7 +49,13 @@ module AbPanel
     def initialize_ab_panel!(options = {})
       AbPanel.reset!
 
-      AbPanel.conditions = JSON.parse(cookies.signed[:ab_panel_conditions])
+
+      AbPanel.conditions =
+        if cookies.signed[:ab_panel_conditions]
+          JSON.parse(cookies.signed[:ab_panel_conditions])
+        else
+          nil
+        end
 
       cookies.signed[:ab_panel_conditions] = AbPanel.serialized_conditions
       AbPanel.funnels = Set.new(cookies.signed[:ab_panel_funnels])
