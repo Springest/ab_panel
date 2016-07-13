@@ -50,7 +50,7 @@ module AbPanel
       AbPanel.reset!
       AbPanel.conditions = cookies.signed['ab_panel_conditions']
       cookies.signed['ab_panel_conditions'] = AbPanel.conditions
-      AbPanel.funnels = cookies.signed['ab_panel_funnels']
+      AbPanel.funnels = Set.new(cookies.signed['ab_panel_funnels'])
       cookies.signed['ab_panel_funnels'] = AbPanel.funnels
 
       {
