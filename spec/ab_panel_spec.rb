@@ -4,14 +4,14 @@ describe AbPanel do
   describe ".experiments" do
     subject { AbPanel.experiments }
 
-    it { should =~ %w(experiment1 experiment2).map(&:to_sym) }
+    it { is_expected.to match_array %w(experiment1 experiment2).map(&:to_sym) }
   end
 
   describe ".weights" do
     let(:experiment) { AbPanel.experiments.first }
     subject { AbPanel.weights(experiment) }
 
-    it { should == [25, 25, 25, 25] }
+    it { is_expected.to eq [25, 25, 25, 25] }
 
     describe "With a nonexistent experiment" do
       let(:experiment) { :does_not_exist }
@@ -27,7 +27,7 @@ describe AbPanel do
 
     let(:experiment) { AbPanel.experiments.first }
 
-    it { should =~ %w( scenario1 scenario2 scenario3 original ).map(&:to_sym) }
+    it { is_expected.to match_array %w( scenario1 scenario2 scenario3 original ).map(&:to_sym) }
 
     describe "With an nonexistent experiment" do
       let(:experiment) { :does_not_exist }
@@ -41,8 +41,8 @@ describe AbPanel do
   describe ".conditions" do
     subject { AbPanel.conditions.experiment1 }
 
-    it { should respond_to :scenario1? }
-    it { should respond_to :original? }
+    it { is_expected.to respond_to :scenario1? }
+    it { is_expected.to respond_to :original? }
 
     describe 'uniqueness' do
       let(:conditions) do
@@ -54,10 +54,10 @@ describe AbPanel do
         ]
       end
 
-      it { conditions.any?.should be true }
-      it { conditions.all?.should be false }
-      it { conditions.select{|c| c}.size.should be 1 }
-      it { conditions.reject{|c| c}.size.should be 3 }
+      it { expect(conditions.any?).to be true }
+      it { expect(conditions.all?).to be false }
+      it { expect(conditions.select{|c| c}.size).to be 1 }
+      it { expect(conditions.reject{|c| c}.size).to be 3 }
     end
   end
 
@@ -72,24 +72,24 @@ describe AbPanel do
 
     it 'adds a funnel' do
       AbPanel.add_funnel('search')
-      AbPanel.funnels.to_a.should == ['search']
+      expect(AbPanel.funnels.to_a).to eq ['search']
     end
 
     it 'only adds a funnel when present' do
       AbPanel.add_funnel(nil)
-      AbPanel.funnels.to_a.should == []
+      expect(AbPanel.funnels.to_a).to eq []
     end
 
     it 'does not add a funnel twice' do
       AbPanel.add_funnel('search')
       AbPanel.add_funnel('search')
-      AbPanel.funnels.to_a.should == ['search']
+      expect(AbPanel.funnels.to_a).to eq ['search']
     end
 
     it 'sets funnels' do
       funnels = Set.new ['search', 'cta']
       AbPanel.funnels = funnels
-      AbPanel.funnels.to_a.should == funnels.to_a
+      expect(AbPanel.funnels.to_a).to eq funnels.to_a
     end
   end
 
