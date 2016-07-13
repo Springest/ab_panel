@@ -48,10 +48,12 @@ module AbPanel
     # in the user's session.
     def initialize_ab_panel!(options = {})
       AbPanel.reset!
-      AbPanel.conditions = cookies.signed['ab_panel_conditions']
-      cookies.signed['ab_panel_conditions'] = AbPanel.conditions
-      AbPanel.funnels = Set.new(cookies.signed['ab_panel_funnels'])
-      cookies.signed['ab_panel_funnels'] = AbPanel.funnels
+
+      AbPanel.conditions = JSON.parse(cookies.signed[:ab_panel_conditions])
+
+      cookies.signed[:ab_panel_conditions] = AbPanel.serialized_conditions
+      AbPanel.funnels = Set.new(cookies.signed[:ab_panel_funnels])
+      cookies.signed[:ab_panel_funnels] = AbPanel.funnels
 
       {
         'distinct_id' => distinct_id,
