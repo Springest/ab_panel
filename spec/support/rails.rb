@@ -2,7 +2,7 @@ require 'rails'
 
 RSpec.configure do |c|
   c.before do
-    Rails.stub(:root) { File.expand_path( '../files', __FILE__ ) }
-    Rails.stub(:env) { 'test' }
+    allow(Rails).to receive(:root) { File.expand_path( '../files', __FILE__ ) }
+    allow(Rails).to receive(:env) { 'test' }
   end
 end

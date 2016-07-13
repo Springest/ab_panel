@@ -22,6 +22,16 @@ module AbPanel
       Thread.current[:ab_panel_conditions] ||= assign_conditions!
     end
 
+    def serialized_conditions
+      cs = {}
+
+      conditions.each_pair do |key, value|
+        cs[key] = value.marshal_dump
+      end
+
+      cs.to_json
+    end
+
     # Set the experiment's conditions.
     #
     # This is used to persist conditions from
@@ -78,6 +88,14 @@ module AbPanel
 
     def assign_conditions!(already_assigned=nil)
       cs = {}
+
+      if already_assigned
+        already_assigned.each do |key, value|
+          already_assigned[key] = OpenStruct.new(already_assigned[key])
+        end
+      end
+
+      already_assigned = OpenStruct.new already_assigned
 
       experiments.each do |experiment|
         cs[experiment] ||= {}
