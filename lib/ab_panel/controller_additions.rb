@@ -109,7 +109,6 @@ module AbPanel
 
       options = {
         distinct_id: distinct_id,
-        ip:          request.remote_ip,
         time:        Time.now.utc,
       }.merge(properties)
 
