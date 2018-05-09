@@ -13,7 +13,10 @@ describe AbPanel::ControllerAdditions do
 
   describe "#distinct_id" do
     let(:cookies) { {} }
-    before { expect(controller).to receive_message_chain(:cookies, :signed).and_return(cookies) }
+    before do
+      allow(controller).to receive_message_chain(:request, :ssl?).and_return(true)
+      allow(controller).to receive_message_chain(:cookies, :signed).and_return(cookies)
+    end
     subject { controller.distinct_id }
 
     it { is_expected.to match /^([A-Z]|[0-9])([A-Z]|[0-9])([A-Z]|[0-9])([A-Z]|[0-9])([A-Z]|[0-9])$/ }

@@ -27,8 +27,20 @@ module AbPanel
     #
     #   `current_user.id` for logged in users.
     def distinct_id
-      cookies.signed['distinct_id'] ||=
-        (0..4).map { |i| i.even? ? ('A'..'Z').to_a[rand(26)] : rand(10) }.join
+      distinct_id = cookies.signed['distinct_id']
+
+      return distinct_id if distinct_id
+
+      distinct_id = (0..4).map { |i| i.even? ? ('A'..'Z').to_a[rand(26)] : rand(10) }.join
+
+      cookies.signed['distinct_id'] =
+        {
+          value: distinct_id,
+          httponly: true,
+          secure: request.ssl?
+        }
+
+      distinct_id
     end
 
     def ab_panel_options
@@ -57,9 +69,18 @@ module AbPanel
           nil
         end
 
-      cookies.signed[:ab_panel_conditions] = AbPanel.serialized_conditions
+      cookies.signed[:ab_panel_conditions] = {
+        value: AbPanel.serialized_conditions,
+        httponly: true,
+        secure: request.ssl?
+      }
+
       AbPanel.funnels = Set.new(cookies.signed[:ab_panel_funnels])
-      cookies.signed[:ab_panel_funnels] = AbPanel.funnels
+      cookies.signed[:ab_panel_funnels] = {
+        value: AbPanel.funnels,
+        httponly: true,
+        secure: request.ssl?
+      }
 
       {
         'distinct_id' => distinct_id,
