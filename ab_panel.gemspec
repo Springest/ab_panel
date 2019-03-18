@@ -24,6 +24,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "byebug"
 
-  spec.add_runtime_dependency "rails", '>= 4.0', '< 5.2'
+  spec.add_runtime_dependency "rails", '>= 4.0'
   spec.add_runtime_dependency "mixpanel"
 end
