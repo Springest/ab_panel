@@ -84,6 +84,17 @@ module AbPanel
       funnels.add(funnel) if funnel.present?
     end
 
+    def environment_hash
+      props = { distinct_id: self.env["distinct_id"] }
+      props.merge!(self.properties) if self.properties
+
+      self.funnels.each { |f| props["funnel_#{f}"] = true }
+
+      self.experiments.each { |exp| props[exp] = self.conditions.send(exp).condition }
+
+      props
+    end
+
     private # ----------------------------------------------------------------------------
 
     def assign_conditions!(already_assigned=nil)
