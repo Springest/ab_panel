@@ -84,7 +84,7 @@ module AbPanel
       funnels.add(funnel) if funnel.present?
     end
 
-    def environment_hash
+    def environment
       props = { distinct_id: self.env["distinct_id"] }
       props.merge!(self.properties) if self.properties
 
